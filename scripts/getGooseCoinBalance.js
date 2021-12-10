@@ -4,6 +4,7 @@ const FarmToken = artifacts.require("FarmToken")
 module.exports = async function (callback) {
   gooseCoin = await GooseCoin.deployed()
   farmToken = await FarmToken.deployed()
+  let accounts = await web3.eth.getAccounts()
 
   // Returns the remaining number of tokens that spender will be allowed to spend on behalf of owner through transferFrom.
   // This is zero by default.
@@ -19,7 +20,7 @@ module.exports = async function (callback) {
   // In order to allow the Smart Contract to transfer to MyToken (ERC-20) on the accounts[0] behalf,
   // we must explicitly allow it.
   // We allow farmToken to transfer x amount of MyToken on our behalf
-  await gooseCoin.approve(farmToken.address, web3.utils.toWei("100", "ether"))
+  await gooseCoin.approve(farmToken.address, web3.utils.toWei("0.5", "ether"))
 
   // Validate that the farmToken can now move x amount of MyToken on our behalf
   const allowanceAfter = await gooseCoin.allowance(accounts[0], farmToken.address)
@@ -54,7 +55,7 @@ module.exports = async function (callback) {
   )
   // Call Deposit function from FarmToken
   console.log("Call Deposit Function")
-  await farmToken.deposit(web3.utils.toWei("100", "ether"))
+  await farmToken.deposit(web3.utils.toWei("0.5", "ether"))
   console.log("*** Goose Coin ***")
   balanceMyTokenAfterAccounts0 = await gooseCoin.balanceOf(accounts[0])
   balanceMyTokenAfterFarmToken = await gooseCoin.balanceOf(farmToken.address)
