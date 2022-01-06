@@ -7,21 +7,26 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 contract GooseCoin is ERC20 {
     mapping(address => uint256) balances;
 
-    // event Transfer(address indexed _from, address indexed _to, uint256 _value);
-
-    constructor() public ERC20("GooseCoin", "GOOSE") {
+    uint256 public constant initialCreationSupply = 420 * (10**6) * 10**18; // 18 decimals
+    uint256 public constant tokenExchangeRate = 69000; // 69000 GOOSE tokens per 1 ETH
+    // uint256 public constant tokenCreationCap =  420 * (10**6) * 10**18; // 18 decimals
+    
+    constructor() ERC20("GooseCoin", "GOOSE") {
         // 10,000,000 total supply
-        _mint(msg.sender, 10000000000000000000000000);
+        // _mint(msg.sender, 1000000000000000000000000000);
+
+        _mint(msg.sender, initialCreationSupply);
     }
 
-    // function buy() public payable {
-    //     uint256 amountTobuy = msg.value;
-    //     uint256 dexBalance = token.balanceOf(address(this));
-    //     require(amountTobuy > 0, "You need to send some ether");
-    //     require(amountTobuy <= dexBalance, "Not enough tokens in the reserve");
-    //     token.transfer(msg.sender, amountTobuy);
-    //     emit Bought(amountTobuy);
-    // }
+    /// @dev Accepts ether and creates new GOOSE tokens.
+    function createTokens(uint256 amount) payable external {
+
+      //msg.value was used as the first parameter here. Where does this value actually come from?
+      uint256 tokens = safeMult(amount, tokenExchangeRate) * 10**18; 
+
+      balances[msg.sender] += tokens;  
+      _mint(msg.sender, tokens); 
+    }
 
     function sendCoin(address receiver, uint256 amount)
         public
@@ -36,5 +41,23 @@ contract GooseCoin is ERC20 {
 
     function getBalance(address addr) public view returns (uint256) {
         return balances[addr];
+    }
+
+    function safeAdd(uint256 x, uint256 y) public pure returns(uint256) {
+      uint256 z = x + y;
+      assert((z >= x) && (z >= y));
+      return z;
+    }
+
+    function safeSubtract(uint256 x, uint256 y) public pure returns(uint256) {
+      assert(x >= y);
+      uint256 z = x - y;
+      return z;
+    }
+
+    function safeMult(uint256 x, uint256 y) public pure returns(uint256) {
+      uint256 z = x * y;
+      assert((x == 0)||(z/x == y));
+      return z;
     }
 }

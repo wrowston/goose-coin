@@ -1,6 +1,10 @@
 const GooseCoin = artifacts.require("GooseCoin")
 const FarmToken = artifacts.require("FarmToken")
 
+let gooseCoin = await GooseCoin.deployed()
+let acconts = await web3.eth.getAccounts()
+let balance = await gooseCoin.balanceOf(accounts[0])
+
 module.exports = async function (callback) {
   gooseCoin = await GooseCoin.deployed()
   farmToken = await FarmToken.deployed()
