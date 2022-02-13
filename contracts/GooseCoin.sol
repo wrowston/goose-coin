@@ -7,7 +7,8 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 contract GooseCoin is ERC20 {
     mapping(address => uint256) balances;
 
-    uint256 public constant initialCreationSupply = 420 * (10**6) * 10**18; // 18 decimals
+    uint256 public constant initialCreationSupply = 420 * (10**6) * 10**18; // 18 decimals = 420,000,000 GOOSE
+   
     uint256 public constant tokenExchangeRate = 69000; // 69000 GOOSE tokens per 1 ETH
     // uint256 public constant tokenCreationCap =  420 * (10**6) * 10**18; // 18 decimals
     
